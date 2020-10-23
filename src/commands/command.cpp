@@ -1,11 +1,11 @@
 #include "command.hpp"
 
+#include <commands/exit_command.hpp>
+#include <commands/get_command.hpp>
+#include <commands/put_command.hpp>
 #include <iostream>
 #include <sstream>
 
-#include "exit_command.hpp"
-#include "get_command.hpp"
-#include "put_command.hpp"
 #include "utils.hpp"
 
 namespace command {

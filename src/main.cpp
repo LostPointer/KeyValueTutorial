@@ -1,8 +1,8 @@
 #include <array>
+#include <commands/command.hpp>
 #include <iostream>
 #include <unordered_map>
 
-#include "command.hpp"
 #include "utils.hpp"
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char const* argv[]) {
