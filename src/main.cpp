@@ -45,8 +45,15 @@ int main() {
       exit(0);
     } else if (command.command == "Put") {
       storage[command.args.at(0)] = command.args.at(1);
+      std::cout << "Put [" << command.args[0] << "] = " << command.args[1]
+                << "\n";
     } else if (command.command == "Get") {
       std::cout << command.args.at(0) << ": " << storage[command.args.at(0)];
+    } else if (command.command == "help") {
+      std::cout
+          << "Available commands:\n Exit - [Exit] exit from program\nPut - "
+             "[Put (key) (value)]. Put in storage in key value\nGet - [Get "
+             "(value)]. Get value by (key)";
     }
   }
 }
