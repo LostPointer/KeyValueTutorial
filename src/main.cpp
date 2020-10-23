@@ -1,24 +1,52 @@
-#include <array>
-#include <commands/command.hpp>
 #include <iostream>
-#include <unordered_map>
+#include <map>
+#include <sstream>
+#include <string>
+#include <vector>
 
-#include "utils.hpp"
+using Storage = std::map<std::string, std::string>;
 
-int main([[maybe_unused]] int argc, [[maybe_unused]] char const* argv[]) {
+std::vector<std::string> SplitString(const std::string& line) {
+  std::stringstream stream(line);
+  std::vector<std::string> result;
+  while (stream) {
+    std::string part;
+    stream >> part;
+    result.push_back(part);
+  }
+
+  return result;
+}
+
+struct Command {
+  std::string command;
+  std::vector<std::string> args;
+  Command(const std::string& command_string) {
+    auto splited_command = SplitString(command_string);
+
+    command = splited_command.at(0);
+
+    args.insert(args.begin(), splited_command.begin() + 1,
+                splited_command.end());
+  }
+};
+
+int main() {
   std::map<std::string, std::string> storage;
 
   while (true) {
-    try {
-      std::string buffer;
-      std::getline(std::cin, buffer);
+    std::string buffer;
+    std::getline(std::cin, buffer);
 
-      auto executed_command = command::MakeCommand(buffer);
-      auto result = executed_command->Execute(storage);
-      std::cout << result << std::endl;
-    } catch (const std::exception& e) {
-      std::cout << "Error: " << e.what() << std::endl;
+    const auto& command = Command(buffer);
+
+    if (command.command == "Exit") {
+      std::cout << "Exit!" << std::endl;
+      exit(0);
+    } else if (command.command == "Put") {
+      storage[command.args.at(0)] = command.args.at(1);
+    } else if (command.command == "Get") {
+      std::cout << command.args.at(0) << ": " << storage[command.args.at(0)];
     }
   }
-  return 0;
 }
