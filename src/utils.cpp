@@ -1,22 +1,23 @@
-#pragma once
-
 #include <iostream>
 #include <string>
 #include <vector>
 
 namespace utils {
-std::vector<std::string> SplitString(const std::string_view& data,
-                                     const std::string_view& separator) {
-  if (data.empty()) return {};
+std::vector<std::string> SplitString(const std::string_view& data) {
+  std::vector<std::string> result;
 
-  size_t first_separator = data.find(separator);
-  if (first_separator == data.npos) return {std::string{data}};
-
-  std::string first_part = std::string{data.substr(0, first_separator)};
-  auto last_part =
-      SplitString(data.substr(first_separator + separator.size()), separator);
-  std::vector<std::string> result{first_part};
-  result.insert(result.end(), last_part.begin(), last_part.end());
+  std::string word;
+  for (size_t i = 0; i < data.size(); ++i) {
+    if (data[i] != ' ') {
+      word.push_back(data[i]);
+    } else if (!word.empty()) {
+      result.push_back(std::move(word));
+      word.clear();
+    }
+  }
+  if (!word.empty()) {
+    result.push_back(word);
+  }
 
   return result;
 }
@@ -27,6 +28,34 @@ std::string ContatinateStrings(const std::vector<std::string>& strings,
   for (const auto& string : strings) {
     result += separator + string;
   }
+  return result;
+}
+
+std::vector<std::string> SplitCommandString(const std::string_view& data) {
+  std::vector<std::string> result;
+
+  std::string word;
+  int bracket_depth = 0;
+  for (size_t i = 0; i < data.size(); ++i) {
+    if (data[i] == '(') {
+      ++bracket_depth;
+      if (bracket_depth == 1) continue;
+    }
+    if (data[i] == ')') {
+      --bracket_depth;
+      if (bracket_depth == 0) continue;
+    }
+    if (data[i] != ' ' || bracket_depth) {
+      word.push_back(data[i]);
+    } else if (!word.empty()) {
+      result.push_back(std::move(word));
+      word.clear();
+    }
+  }
+  if (!word.empty()) {
+    result.push_back(word);
+  }
+
   return result;
 }
 
